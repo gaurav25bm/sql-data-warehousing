@@ -64,20 +64,20 @@ The pipeline is structured into three distinct layers:
 
 ## 📊 Data Model & Star Schema
 
-The **Gold Layer** is modeled into a classic Star Schema consisting of two dimension views and one central fact view:
+The **Gold Layer** uses a Star Schema with two dimensions and one fact view:
 
 ### **Dimension Tables**
-- **`gold.dim_customers`**: Enriched customer profile combining CRM personal details with ERP demographics (birth date, generation, country).
-- **`gold.dim_products`**: Product catalog enriched with ERP categories, subcategories, and maintenance flags. Filtered for active product records.
+- **`gold.dim_customers`**: Enriched customer profile with CRM and ERP demographics.
+- **`gold.dim_products`**: Active product catalog with categories and maintenance flags.
 
 ### **Fact Table**
-- **`gold.fact_sales`**: Sales transactions joined with Gold dimension views to inherit surrogate primary keys (`customer_key`, `product_key`).
+- **`gold.fact_sales`**: Transactional sales joined with dimension surrogate keys.
 
 | Table / View | Type | Key Columns | Description |
 | :--- | :--- | :--- | :--- |
-| `gold.dim_customers` | Dimension | `customer_key` (PK), `customer_id` | Unified customer dimension |
-| `gold.dim_products` | Dimension | `product_key` (PK), `product_number` | Active product dimension |
-| `gold.fact_sales` | Fact | `order_number`, `product_key` (FK), `customer_key` (FK) | Core transactional sales fact |
+| `gold.dim_customers` | Dimension | `customer_key` (PK), `customer_id` | Customer dimension |
+| `gold.dim_products` | Dimension | `product_key` (PK), `product_number` | Product dimension |
+| `gold.fact_sales` | Fact | `order_number`, `product_key`, `customer_key` | Sales fact table |
 
 ---
 
@@ -85,23 +85,10 @@ The **Gold Layer** is modeled into a classic Star Schema consisting of two dimen
 
 ```text
 sql-data-warehousing/
-│
 ├── scripts/
-│   ├── bronze/
-│   │   ├── ddl_bronze.sql             # Creates Bronze schema & tables
-│   │   └── proc_load_bronze.sql       # Stored procedure to bulk load raw data
-│   │
-│   ├── silver/
-│   │   ├── ddl_silver.sql             # Creates Silver schema & tables
-│   │   └── proc_load_silver.sql       # Stored procedure for cleansing & ETL
-│   │
-│   └── gold/
-│       └── ddl_gold.sql               # Creates Gold dimension & fact views
-│
-├── tests/
-│   ├── quality_checks_silver.sql      # Data cleansing validation checks
-│   └── quality_checks_gold.sql        # Uniqueness & Referential Integrity tests
-│
-├── datasets/                          # Raw CSV datasets (CRM & ERP source files)
-├── LICENSE                            # License terms
-└── README.md                          # Project Documentation
+│   ├── bronze/ (DDL & Load scripts)
+│   ├── silver/ (DDL & ETL scripts)
+│   └── gold/   (DDL Star Schema views)
+├── tests/      (Quality & integrity checks)
+├── datasets/   (Source CSV files)
+└── README.md   (Project documentation)
