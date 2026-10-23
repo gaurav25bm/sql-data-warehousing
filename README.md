@@ -33,36 +33,34 @@ This project simulates a real-world enterprise data engineering pipeline, ingest
 
 The pipeline is structured into three distinct layers:
 
+```text
 +-----------------------------------------------------------------------+
 |                            SOURCE SYSTEMS                             |
 |                    CRM System   |   ERP System                        |
 +-----------------------------------++----------------------------------+
-||
-/
+                                    ||
+                                    \/
 +-----------------------------------------------------------------------+
 |                          1. BRONZE LAYER                              |
-|   - Ingests raw data as-is from CSV/source files                       |
-|   - Truncate & Bulk Load strategy                                      |
+|   - Ingests raw data as-is from CSV/source files                      |
+|   - Truncate & Bulk Load strategy                                     |
 +-----------------------------------++----------------------------------+
-||
-/
+                                    ||
+                                    \/
 +-----------------------------------------------------------------------+
 |                          2. SILVER LAYER                              |
-|   - Cleanses, standardizes, and normalizes raw data                    |
+|   - Cleanses, standardizes, and normalizes raw data                   |
 |   - Trims whitespace, maps codes, handles NULLs                       |
 |   - Appends metadata (dwh_create_date)                                |
 +-----------------------------------++----------------------------------+
-||
-/
+                                    ||
+                                    \/
 +-----------------------------------------------------------------------+
 |                          3. GOLD LAYER                                |
-|   - Star Schema Data Model (Fact & Dimension Views)                    |
+|   - Star Schema Data Model (Fact & Dimension Views)                   |
 |   - Surrogate Keys via ROW_NUMBER()                                   |
 |   - Optimized for Power BI, Tableau, and SQL Reporting                |
 +-----------------------------------------------------------------------+
-
-
----
 
 ## 📊 Data Model & Star Schema
 
