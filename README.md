@@ -31,37 +31,11 @@ This project simulates a real-world enterprise data engineering pipeline, ingest
 
 ## 🏗️ Data Architecture (Medallion)
 
-The pipeline is structured into three distinct layers:
+The data warehouse is structured into three progressive layers to ensure data quality, standardization, and analytics readiness:
 
-```text
-+-----------------------------------------------------------------------+
-|                            SOURCE SYSTEMS                             |
-|                    CRM System   |   ERP System                        |
-+-----------------------------------++----------------------------------+
-                                    ||
-                                    \/
-+-----------------------------------------------------------------------+
-|                          1. BRONZE LAYER                              |
-|   - Ingests raw data as-is from CSV/source files                      |
-|   - Truncate & Bulk Load strategy                                     |
-+-----------------------------------++----------------------------------+
-                                    ||
-                                    \/
-+-----------------------------------------------------------------------+
-|                          2. SILVER LAYER                              |
-|   - Cleanses, standardizes, and normalizes raw data                   |
-|   - Trims whitespace, maps codes, handles NULLs                       |
-|   - Appends metadata (dwh_create_date)                                |
-+-----------------------------------++----------------------------------+
-                                    ||
-                                    \/
-+-----------------------------------------------------------------------+
-|                          3. GOLD LAYER                                |
-|   - Star Schema Data Model (Fact & Dimension Views)                   |
-|   - Surrogate Keys via ROW_NUMBER()                                   |
-|   - Optimized for Power BI, Tableau, and SQL Reporting                |
-+-----------------------------------------------------------------------+
-
+- **Bronze Layer (Raw)**: Ingests raw data as-is from CRM and ERP source files using a truncate-and-load strategy.
+- **Silver Layer (Cleaned)**: Cleanses data, trims whitespace, handles NULLs, standardizes formats, and appends metadata audit columns (`dwh_create_date`).
+- **Gold Layer (Analytics)**: Exposes star-schema dimension and fact views (`dim_customers`, `dim_products`, `fact_sales`) powered by surrogate primary keys (`ROW_NUMBER()`) for high-performance reporting.
 ## 📊 Data Model & Star Schema
 
 The **Gold Layer** uses a Star Schema with two dimensions and one fact view:
